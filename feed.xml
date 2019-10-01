@@ -1,17 +1,196 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="4.0.0">Jekyll</generator><link href="http://localhost:4000/feed.xml" rel="self" type="application/atom+xml" /><link href="http://localhost:4000/" rel="alternate" type="text/html" /><updated>2019-09-30T14:14:23-05:00</updated><id>http://localhost:4000/feed.xml</id><title type="html">Matt Software Architecture</title><subtitle>A blog about software architecture and design.</subtitle><entry><title type="html">Welcome to Jekyll!</title><link href="http://localhost:4000/jekyll/update/2019/09/30/welcome-to-jekyll.html" rel="alternate" type="text/html" title="Welcome to Jekyll!" /><published>2019-09-30T14:02:32-05:00</published><updated>2019-09-30T14:02:32-05:00</updated><id>http://localhost:4000/jekyll/update/2019/09/30/welcome-to-jekyll</id><content type="html" xml:base="http://localhost:4000/jekyll/update/2019/09/30/welcome-to-jekyll.html">&lt;p&gt;You’ll find this post in your &lt;code class=&quot;highlighter-rouge&quot;&gt;_posts&lt;/code&gt; directory. Go ahead and edit it and re-build the site to see your changes. You can rebuild the site in many different ways, but the most common way is to run &lt;code class=&quot;highlighter-rouge&quot;&gt;jekyll serve&lt;/code&gt;, which launches a web server and auto-regenerates your site when a file is updated.&lt;/p&gt;
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="4.0.0">Jekyll</generator><link href="http://localhost:4000/feed.xml" rel="self" type="application/atom+xml" /><link href="http://localhost:4000/" rel="alternate" type="text/html" /><updated>2019-09-30T22:59:06-05:00</updated><id>http://localhost:4000/feed.xml</id><title type="html">Matt Software Architecture</title><subtitle>A blog about software architecture and design.</subtitle><entry><title type="html">Finite State Machine Overview</title><link href="http://localhost:4000/state/machines/2019/09/30/state-machines-initial.html" rel="alternate" type="text/html" title="Finite State Machine Overview" /><published>2019-09-30T14:02:32-05:00</published><updated>2019-09-30T14:02:32-05:00</updated><id>http://localhost:4000/state/machines/2019/09/30/state-machines-initial</id><content type="html" xml:base="http://localhost:4000/state/machines/2019/09/30/state-machines-initial.html">&lt;h1 id=&quot;overview&quot;&gt;Overview&lt;/h1&gt;
 
-&lt;p&gt;Jekyll requires blog post files to be named according to the following format:&lt;/p&gt;
+&lt;p&gt;Software applications are asynchronous and waiting to for events from a user, operating system or hardware.  Finite state machines (FSM) make it easy to represent system and have been used for over 60 years in hardware, software and protocols.  If you have ever worked on a system that has a status field on any of the entities, like an ordering system, you have likely created a poorly defined state machine.  Using explicated state machine and only allowing single threaded access to state changes prevents race conditions which are very common.&lt;/p&gt;
 
-&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;YEAR-MONTH-DAY-title.MARKUP&lt;/code&gt;&lt;/p&gt;
+&lt;p&gt;State machines are made up of States, Events, and Transitions.  For software it is also useful to have action that can run when in a specific state.&lt;/p&gt;
+&lt;ul&gt;
+  &lt;li&gt;State is the current state of the application.&lt;/li&gt;
+  &lt;li&gt;Event triggers either a transition or an action on the state to another.&lt;/li&gt;
+  &lt;li&gt;Transition is going from one state to another.  Usually you run logic when entering and/or leaving a state.&lt;/li&gt;
+  &lt;li&gt;Actions A piece of logic to run while in a current state.&lt;/li&gt;
+&lt;/ul&gt;
 
-&lt;p&gt;Where &lt;code class=&quot;highlighter-rouge&quot;&gt;YEAR&lt;/code&gt; is a four-digit number, &lt;code class=&quot;highlighter-rouge&quot;&gt;MONTH&lt;/code&gt; and &lt;code class=&quot;highlighter-rouge&quot;&gt;DAY&lt;/code&gt; are both two-digit numbers, and &lt;code class=&quot;highlighter-rouge&quot;&gt;MARKUP&lt;/code&gt; is the file extension representing the format used in the file. After that, include the necessary front matter. Take a look at the source for this post to get an idea about how it works.&lt;/p&gt;
+&lt;p&gt;Creating a state machine is an iterative process and new events can come up that you need to respond to.  Most languages contain a very easy way to create state machines either using switch statements and enums (Java, C#, TypeScript, JavaScript, etc) or pattern matching (Haskell, F#, etc).  For business workflows creating a library to manage the current state and any pending transition is necessary to survive a restart/failure.&lt;/p&gt;
 
-&lt;p&gt;Jekyll also offers powerful support for code snippets:&lt;/p&gt;
+&lt;p&gt;State machines can be composed into large more complex group of state machines and receive events from each other.&lt;/p&gt;
 
-&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-ruby&quot; data-lang=&quot;ruby&quot;&gt;&lt;span class=&quot;k&quot;&gt;def&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;print_hi&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;name&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
-  &lt;span class=&quot;nb&quot;&gt;puts&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;Hi, &lt;/span&gt;&lt;span class=&quot;si&quot;&gt;#{&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;name&lt;/span&gt;&lt;span class=&quot;si&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;&lt;/span&gt;
-&lt;span class=&quot;k&quot;&gt;end&lt;/span&gt;
-&lt;span class=&quot;n&quot;&gt;print_hi&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;'Tom'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
-&lt;span class=&quot;c1&quot;&gt;#=&amp;gt; prints 'Hi, Tom' to STDOUT.&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+&lt;h1 id=&quot;ui-examples&quot;&gt;UI Examples&lt;/h1&gt;
 
-&lt;p&gt;Check out the &lt;a href=&quot;https://jekyllrb.com/docs/home&quot;&gt;Jekyll docs&lt;/a&gt; for more info on how to get the most out of Jekyll. File all bugs/feature requests at &lt;a href=&quot;https://github.com/jekyll/jekyll&quot;&gt;Jekyll’s GitHub repo&lt;/a&gt;. If you have questions, you can ask them on &lt;a href=&quot;https://talk.jekyllrb.com/&quot;&gt;Jekyll Talk&lt;/a&gt;.&lt;/p&gt;</content><author><name></name></author><summary type="html">You’ll find this post in your _posts directory. Go ahead and edit it and re-build the site to see your changes. You can rebuild the site in many different ways, but the most common way is to run jekyll serve, which launches a web server and auto-regenerates your site when a file is updated.</summary></entry></feed>
+&lt;p&gt;State machines are used often in UIs for handling user interaction.&lt;/p&gt;
+
+&lt;h2 id=&quot;form-example&quot;&gt;Form Example&lt;/h2&gt;
+
+&lt;p&gt;When creating an editable form you can use state machines to manage the loading and saving of the form.  By using a state machine it make it easy to prevent a user for trying to submit the form before it’s done loading, double submitting and handling errors.&lt;/p&gt;
+
+&lt;h3 id=&quot;step-1-define-the-states-and-events&quot;&gt;Step 1: Define the States and Events&lt;/h3&gt;
+
+&lt;p&gt;First thing you need to do is define the states and events for the state machine.  For a form state machine you need to track the loading of the data and responding to user interaction.  Below is the states for a user state machine.&lt;/p&gt;
+
+&lt;h4 id=&quot;states&quot;&gt;States&lt;/h4&gt;
+&lt;ul&gt;
+  &lt;li&gt;&lt;strong&gt;Pending&lt;/strong&gt; - Waiting for an event to occur.&lt;/li&gt;
+  &lt;li&gt;&lt;strong&gt;Loading&lt;/strong&gt; - Loading the data for the form.&lt;/li&gt;
+  &lt;li&gt;&lt;strong&gt;Active&lt;/strong&gt; - Waiting for a user action on the form.&lt;/li&gt;
+  &lt;li&gt;&lt;strong&gt;Saving&lt;/strong&gt; - Saving the form.&lt;/li&gt;
+  &lt;li&gt;&lt;strong&gt;Error&lt;/strong&gt; - An error has occurred.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3 id=&quot;events&quot;&gt;Events&lt;/h3&gt;
+&lt;ul&gt;
+  &lt;li&gt;&lt;em&gt;Load&lt;/em&gt; - Load the data for the form.&lt;/li&gt;
+  &lt;li&gt;&lt;em&gt;Loaded&lt;/em&gt; - All of the data for the form has loaded.&lt;/li&gt;
+  &lt;li&gt;&lt;em&gt;Save&lt;/em&gt; - Save the form.&lt;/li&gt;
+  &lt;li&gt;&lt;em&gt;Error&lt;/em&gt; - An error has occurred.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3 id=&quot;step-2-define-the-transitions&quot;&gt;Step 2: Define the transitions&lt;/h3&gt;
+
+&lt;p&gt;When the form first load the form we need to load any data associated with the form.  The &lt;strong&gt;Pending&lt;/strong&gt; indicates the form data hasn’t been loaded yet.  The init code triggers the &lt;em&gt;Load&lt;/em&gt; event which changes the state to &lt;strong&gt;Loading&lt;/strong&gt; and calls the code the load the form data.  Once all of the data has loaded the event &lt;em&gt;Loaded&lt;/em&gt; is trigger which changes the state to &lt;strong&gt;Active&lt;/strong&gt;.  Now the form is ready for user input and the user can interact with the form.&lt;/p&gt;
+
+&lt;p&gt;If there is an error trying to load the data, the event &lt;em&gt;Error&lt;/em&gt; is triggered and the state moves to &lt;strong&gt;Error&lt;/strong&gt;.&lt;/p&gt;
+
+&lt;p&gt;After the user has fills out the form, they click the save button which triggers the &lt;em&gt;Save&lt;/em&gt; event and changes the state to &lt;strong&gt;Saving&lt;/strong&gt;.  While the form is saving the user can’t submit the form again since it’s in an invalid state of &lt;strong&gt;Saving&lt;/strong&gt;.  Once the form is done saving and triggers &lt;em&gt;Saved&lt;/em&gt; event and then goes to the &lt;strong&gt;Active&lt;/strong&gt; state.&lt;/p&gt;
+
+&lt;h3 id=&quot;typescript-example&quot;&gt;Typescript example&lt;/h3&gt;
+
+&lt;div class=&quot;language-typescript highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;kr&quot;&gt;enum&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;FormState&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+  &lt;span class=&quot;nx&quot;&gt;Pending&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
+  &lt;span class=&quot;nx&quot;&gt;Loading&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
+  &lt;span class=&quot;nx&quot;&gt;Active&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;2&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
+  &lt;span class=&quot;nx&quot;&gt;Saving&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;3&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
+  &lt;span class=&quot;nb&quot;&gt;Error&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;4&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+
+&lt;span class=&quot;kr&quot;&gt;enum&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;FormEvent&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+  &lt;span class=&quot;nx&quot;&gt;Load&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
+  &lt;span class=&quot;nx&quot;&gt;Loaded&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
+  &lt;span class=&quot;nx&quot;&gt;Save&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;2&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
+  &lt;span class=&quot;nx&quot;&gt;Saved&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;3&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
+  &lt;span class=&quot;nb&quot;&gt;Error&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;4&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+
+&lt;span class=&quot;kd&quot;&gt;class&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;MyComponent&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+  &lt;span class=&quot;nl&quot;&gt;currentState&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;FormState&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;FormState&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;Pending&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+  
+  &lt;span class=&quot;nx&quot;&gt;changeState&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;event&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;FormEvent&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+    &lt;span class=&quot;nx&quot;&gt;console&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;log&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;`Processing event &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;${&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;FormEvent&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;event&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]}&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;`&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+    &lt;span class=&quot;k&quot;&gt;switch&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;event&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+      &lt;span class=&quot;k&quot;&gt;case&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;FormEvent&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;Load&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;
+        &lt;span class=&quot;k&quot;&gt;if&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;this&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;currentState&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;===&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;FormState&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;Pending&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+          &lt;span class=&quot;k&quot;&gt;this&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;loadForm&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;();&lt;/span&gt;
+        &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+        &lt;span class=&quot;k&quot;&gt;break&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+      
+      &lt;span class=&quot;k&quot;&gt;case&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;FormEvent&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;Loaded&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;
+        &lt;span class=&quot;k&quot;&gt;if&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;this&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;currentState&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;===&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;FormState&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;Loading&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+          &lt;span class=&quot;k&quot;&gt;this&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;setState&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;FormState&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;Active&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
+        &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+        &lt;span class=&quot;k&quot;&gt;break&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+      
+      &lt;span class=&quot;k&quot;&gt;case&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;FormEvent&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;Save&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;
+        &lt;span class=&quot;k&quot;&gt;if&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;this&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;currentState&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;===&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;FormState&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;Active&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+          &lt;span class=&quot;k&quot;&gt;this&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;setState&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;FormState&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;Saving&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
+          &lt;span class=&quot;k&quot;&gt;this&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;mySaveFunction&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;();&lt;/span&gt;
+        &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+        &lt;span class=&quot;k&quot;&gt;break&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+    
+      &lt;span class=&quot;k&quot;&gt;case&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;FormEvent&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;Saved&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;
+        &lt;span class=&quot;k&quot;&gt;if&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;this&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;currentState&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;===&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;FormState&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;Saving&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+          &lt;span class=&quot;k&quot;&gt;this&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;doAfterSaveOps&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;();&lt;/span&gt;
+          &lt;span class=&quot;k&quot;&gt;this&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;setState&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;FormState&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;Active&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
+        &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+        &lt;span class=&quot;k&quot;&gt;break&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+            
+      &lt;span class=&quot;k&quot;&gt;case&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;FormEvent&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;Error&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;
+        &lt;span class=&quot;k&quot;&gt;if&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;this&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;currentState&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;===&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;FormState&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;Loading&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+          &lt;span class=&quot;k&quot;&gt;this&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;setState&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;FormState&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;Error&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
+          &lt;span class=&quot;k&quot;&gt;this&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;notifyUser&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;();&lt;/span&gt;
+        &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;else&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;if&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;this&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;currentState&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;===&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;FormState&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;Saving&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+          &lt;span class=&quot;k&quot;&gt;this&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;notifyErrorOnForm&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;();&lt;/span&gt;
+          &lt;span class=&quot;k&quot;&gt;this&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;setState&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;FormState&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;Active&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
+        &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+        &lt;span class=&quot;k&quot;&gt;break&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+    &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+  &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+  &lt;span class=&quot;nx&quot;&gt;setState&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;state&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;FormState&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+    &lt;span class=&quot;nx&quot;&gt;console&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;log&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;`Changing state from &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;${&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;FormState&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;this&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;currentState&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]}&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt; to &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;${&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;FormState&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;state&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]}&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;`&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+    &lt;span class=&quot;k&quot;&gt;this&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;currentState&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;state&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+  &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;h3 id=&quot;ui-additional-use-cases&quot;&gt;UI Additional Use Cases&lt;/h3&gt;
+
+&lt;p&gt;Using state machines for user interaction is also natural and useful.  Implementing complex user interaction like drag and drop can be done using state machines.  The mapping events from the mouse and keyboard through the state machine make it easy to handle moving and other complex interaction you might want to do.&lt;/p&gt;
+
+&lt;h1 id=&quot;workflow-engines&quot;&gt;Workflow Engines&lt;/h1&gt;
+
+&lt;p&gt;Most workflow engines provided by big vendors with graphical user interfaces are really state machines.  A user/developer for these systems defines the flow of data and what actions to perform on a state change and/or what conditions must occur to change the state.  Most of these systems are really slow and unnecessary.  It is very easy to write a state machine library and persist the results and transition to a data store.  Business workflows can been very complex and have 100s of state and be a combination of multiple states.&lt;/p&gt;
+
+&lt;p&gt;If you need to have low latency and high throughput look at using Command Query Responsibility Segregation.  Most business application do not need this throughput and this design is fast enough for most use cases.&lt;/p&gt;
+
+&lt;h2 id=&quot;design&quot;&gt;Design&lt;/h2&gt;
+
+&lt;p&gt;A recommend designing your library based on &lt;a href=&quot;https://github.com/p-org/PSharp&quot;&gt;PSharp&lt;/a&gt;.  First thing you need is a decided how you are going to prevent multiple threads for accessing the state machine.  I would suggest using a actor library or framework.  You do not want nor need to have the a state machine instance per an actor.  Make the state machine thread safe by having all of the fields readonly and don’t change the state on any of the state machine.  The current state is stored in the actor.&lt;/p&gt;
+
+&lt;h3 id=&quot;where-to-store-the-state&quot;&gt;Where to Store the State&lt;/h3&gt;
+
+&lt;p&gt;The state machine needs to have a context associated with it and a few accessor on it.  None of the accessor need to be thread safe.&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;Current State - The current state.&lt;/li&gt;
+  &lt;li&gt;Set State - A way to set the state.&lt;/li&gt;
+  &lt;li&gt;Queue - If you want it to behave like PSharp need the queue to store the pending events to process.  This can be really small since it will only contain events the state machine trigger itself and defered events.  The events need to be processed in order.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3 id=&quot;how-to-define-the-states&quot;&gt;How to define the States&lt;/h3&gt;
+
+&lt;p&gt;Create an interface with a couple of fields and methods.&lt;/p&gt;
+
+&lt;h4 id=&quot;fields&quot;&gt;Fields&lt;/h4&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;State - The state it represents.&lt;/li&gt;
+  &lt;li&gt;Events - A dictionary of events it supports.
+    &lt;ul&gt;
+      &lt;li&gt;Ignore&lt;/li&gt;
+      &lt;li&gt;Defer - May not need this one.&lt;/li&gt;
+      &lt;li&gt;To - The next state to go to.&lt;/li&gt;
+      &lt;li&gt;Action - An action to run in this state.&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+  &lt;li&gt;Enter - Called when you enter the state.&lt;/li&gt;
+  &lt;li&gt;Exit - Called when you exit a state.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3 id=&quot;defining-the-events&quot;&gt;Defining the Events.&lt;/h3&gt;
+
+&lt;p&gt;The events that go with the state need to support certain actions.  There are a couple of options for doing this.  I personal use an interface and an enum of the action types I need.  Then I define all of the possible fields I need which are ActionType, NewState and Action.  Then I create a DSL for defining the event mapping.&lt;/p&gt;
+
+&lt;h3 id=&quot;creating-the-state-machine&quot;&gt;Creating the State Machine&lt;/h3&gt;
+
+&lt;p&gt;In the actor you have a transition function which takes the event and the parameter type for the state machine.  The parameter could be null depending on the event.  When a new event is received, it needs to be saved to the database before being processed.  Once transition has been completed, mark the event as processed and update the state.&lt;/p&gt;
+
+&lt;h3 id=&quot;transition-and-event-storage&quot;&gt;Transition and Event Storage&lt;/h3&gt;
+
+&lt;p&gt;Need to store the following things in the database:&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;The event names and descriptions.&lt;/li&gt;
+  &lt;li&gt;The state names and descriptions.&lt;/li&gt;
+  &lt;li&gt;Current state of the actor&lt;/li&gt;
+  &lt;li&gt;Transition history&lt;/li&gt;
+  &lt;li&gt;Event history&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;If you need to be very fast, use a single writer and update in a batch.  If this still isn’t fast enough, use an append only log with a single writer.&lt;/p&gt;
+
+&lt;h2 id=&quot;addition-resources&quot;&gt;Addition Resources&lt;/h2&gt;
+
+&lt;p&gt;Martin Thompson talks on YouTube, Infoq and Twitter.  &lt;a href=&quot;https://github.com/real-logic/aeron&quot;&gt;Aeron&lt;/a&gt; has many state machines defined in it using Java Enums and is extremely fast.  Use atomic operations for managing the different states.&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&quot;https://github.com/p-org/PSharp&quot;&gt;PSharp&lt;/a&gt; is a library and a DSL for creating state machines.&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&quot;http://www.tcpipguide.com/free/t_TCPOperationalOverviewandtheTCPFiniteStateMachineF-2.htm&quot;&gt;TCP/IP&lt;/a&gt; state machine&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&quot;https://raft.github.io/&quot;&gt;Raft&lt;/a&gt; Raft Protocol&lt;/p&gt;</content><author><name></name></author><summary type="html">Overview</summary></entry></feed>

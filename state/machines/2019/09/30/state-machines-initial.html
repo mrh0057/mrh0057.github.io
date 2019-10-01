@@ -1,0 +1,275 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1"><!-- Begin Jekyll SEO tag v2.6.1 -->
+<title>Finite State Machine Overview | Matt Software Architecture</title>
+<meta name="generator" content="Jekyll v4.0.0" />
+<meta property="og:title" content="Finite State Machine Overview" />
+<meta property="og:locale" content="en_US" />
+<meta name="description" content="Overview" />
+<meta property="og:description" content="Overview" />
+<link rel="canonical" href="http://localhost:4000/state/machines/2019/09/30/state-machines-initial.html" />
+<meta property="og:url" content="http://localhost:4000/state/machines/2019/09/30/state-machines-initial.html" />
+<meta property="og:site_name" content="Matt Software Architecture" />
+<meta property="og:type" content="article" />
+<meta property="article:published_time" content="2019-09-30T14:02:32-05:00" />
+<script type="application/ld+json">
+{"@type":"BlogPosting","url":"http://localhost:4000/state/machines/2019/09/30/state-machines-initial.html","headline":"Finite State Machine Overview","dateModified":"2019-09-30T14:02:32-05:00","datePublished":"2019-09-30T14:02:32-05:00","mainEntityOfPage":{"@type":"WebPage","@id":"http://localhost:4000/state/machines/2019/09/30/state-machines-initial.html"},"description":"Overview","@context":"https://schema.org"}</script>
+<!-- End Jekyll SEO tag -->
+<link rel="stylesheet" href="/assets/main.css"><link type="application/atom+xml" rel="alternate" href="http://localhost:4000/feed.xml" title="Matt Software Architecture" /></head>
+<body><header class="site-header" role="banner">
+
+  <div class="wrapper"><a class="site-title" rel="author" href="/">Matt Software Architecture</a><nav class="site-nav">
+        <input type="checkbox" id="nav-trigger" class="nav-trigger" />
+        <label for="nav-trigger">
+          <span class="menu-icon">
+            <svg viewBox="0 0 18 15" width="18px" height="15px">
+              <path d="M18,1.484c0,0.82-0.665,1.484-1.484,1.484H1.484C0.665,2.969,0,2.304,0,1.484l0,0C0,0.665,0.665,0,1.484,0 h15.032C17.335,0,18,0.665,18,1.484L18,1.484z M18,7.516C18,8.335,17.335,9,16.516,9H1.484C0.665,9,0,8.335,0,7.516l0,0 c0-0.82,0.665-1.484,1.484-1.484h15.032C17.335,6.031,18,6.696,18,7.516L18,7.516z M18,13.516C18,14.335,17.335,15,16.516,15H1.484 C0.665,15,0,14.335,0,13.516l0,0c0-0.82,0.665-1.483,1.484-1.483h15.032C17.335,12.031,18,12.695,18,13.516L18,13.516z"/>
+            </svg>
+          </span>
+        </label>
+
+        <div class="trigger"><a class="page-link" href="/about/">About</a></div>
+      </nav></div>
+</header>
+<main class="page-content" aria-label="Content">
+      <div class="wrapper">
+        <article class="post h-entry" itemscope itemtype="http://schema.org/BlogPosting">
+
+  <header class="post-header">
+    <h1 class="post-title p-name" itemprop="name headline">Finite State Machine Overview</h1>
+    <p class="post-meta">
+      <time class="dt-published" datetime="2019-09-30T14:02:32-05:00" itemprop="datePublished">Sep 30, 2019
+      </time></p>
+  </header>
+
+  <div class="post-content e-content" itemprop="articleBody">
+    <h1 id="overview">Overview</h1>
+
+<p>Software applications are asynchronous and waiting to for events from a user, operating system or hardware.  Finite state machines (FSM) make it easy to represent system and have been used for over 60 years in hardware, software and protocols.  If you have ever worked on a system that has a status field on any of the entities, like an ordering system, you have likely created a poorly defined state machine.  Using explicated state machine and only allowing single threaded access to state changes prevents race conditions which are very common.</p>
+
+<p>State machines are made up of States, Events, and Transitions.  For software it is also useful to have action that can run when in a specific state.</p>
+<ul>
+  <li>State is the current state of the application.</li>
+  <li>Event triggers either a transition or an action on the state to another.</li>
+  <li>Transition is going from one state to another.  Usually you run logic when entering and/or leaving a state.</li>
+  <li>Actions A piece of logic to run while in a current state.</li>
+</ul>
+
+<p>Creating a state machine is an iterative process and new events can come up that you need to respond to.  Most languages contain a very easy way to create state machines either using switch statements and enums (Java, C#, TypeScript, JavaScript, etc) or pattern matching (Haskell, F#, etc).  For business workflows creating a library to manage the current state and any pending transition is necessary to survive a restart/failure.</p>
+
+<p>State machines can be composed into large more complex group of state machines and receive events from each other.</p>
+
+<h1 id="ui-examples">UI Examples</h1>
+
+<p>State machines are used often in UIs for handling user interaction.</p>
+
+<h2 id="form-example">Form Example</h2>
+
+<p>When creating an editable form you can use state machines to manage the loading and saving of the form.  By using a state machine it make it easy to prevent a user for trying to submit the form before it’s done loading, double submitting and handling errors.</p>
+
+<h3 id="step-1-define-the-states-and-events">Step 1: Define the States and Events</h3>
+
+<p>First thing you need to do is define the states and events for the state machine.  For a form state machine you need to track the loading of the data and responding to user interaction.  Below is the states for a user state machine.</p>
+
+<h4 id="states">States</h4>
+<ul>
+  <li><strong>Pending</strong> - Waiting for an event to occur.</li>
+  <li><strong>Loading</strong> - Loading the data for the form.</li>
+  <li><strong>Active</strong> - Waiting for a user action on the form.</li>
+  <li><strong>Saving</strong> - Saving the form.</li>
+  <li><strong>Error</strong> - An error has occurred.</li>
+</ul>
+
+<h3 id="events">Events</h3>
+<ul>
+  <li><em>Load</em> - Load the data for the form.</li>
+  <li><em>Loaded</em> - All of the data for the form has loaded.</li>
+  <li><em>Save</em> - Save the form.</li>
+  <li><em>Error</em> - An error has occurred.</li>
+</ul>
+
+<h3 id="step-2-define-the-transitions">Step 2: Define the transitions</h3>
+
+<p>When the form first load the form we need to load any data associated with the form.  The <strong>Pending</strong> indicates the form data hasn’t been loaded yet.  The init code triggers the <em>Load</em> event which changes the state to <strong>Loading</strong> and calls the code the load the form data.  Once all of the data has loaded the event <em>Loaded</em> is trigger which changes the state to <strong>Active</strong>.  Now the form is ready for user input and the user can interact with the form.</p>
+
+<p>If there is an error trying to load the data, the event <em>Error</em> is triggered and the state moves to <strong>Error</strong>.</p>
+
+<p>After the user has fills out the form, they click the save button which triggers the <em>Save</em> event and changes the state to <strong>Saving</strong>.  While the form is saving the user can’t submit the form again since it’s in an invalid state of <strong>Saving</strong>.  Once the form is done saving and triggers <em>Saved</em> event and then goes to the <strong>Active</strong> state.</p>
+
+<h3 id="typescript-example">Typescript example</h3>
+
+<div class="language-typescript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kr">enum</span> <span class="nx">FormState</span> <span class="p">{</span>
+  <span class="nx">Pending</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span>
+  <span class="nx">Loading</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span>
+  <span class="nx">Active</span> <span class="o">=</span> <span class="mi">2</span><span class="p">,</span>
+  <span class="nx">Saving</span> <span class="o">=</span> <span class="mi">3</span><span class="p">,</span>
+  <span class="nb">Error</span> <span class="o">=</span> <span class="mi">4</span>
+<span class="p">}</span>
+
+<span class="kr">enum</span> <span class="nx">FormEvent</span> <span class="p">{</span>
+  <span class="nx">Load</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span>
+  <span class="nx">Loaded</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span>
+  <span class="nx">Save</span> <span class="o">=</span> <span class="mi">2</span><span class="p">,</span>
+  <span class="nx">Saved</span> <span class="o">=</span> <span class="mi">3</span><span class="p">,</span>
+  <span class="nb">Error</span> <span class="o">=</span> <span class="mi">4</span>
+<span class="p">}</span>
+
+<span class="kd">class</span> <span class="nx">MyComponent</span> <span class="p">{</span>
+  <span class="nl">currentState</span><span class="p">:</span> <span class="nx">FormState</span> <span class="o">=</span> <span class="nx">FormState</span><span class="p">.</span><span class="nx">Pending</span><span class="p">;</span>
+  
+  <span class="nx">changeState</span><span class="p">(</span><span class="nx">event</span><span class="p">:</span> <span class="nx">FormEvent</span><span class="p">)</span> <span class="p">{</span>
+    <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="s2">`Processing event </span><span class="p">${</span><span class="nx">FormEvent</span><span class="p">[</span><span class="nx">event</span><span class="p">]}</span><span class="s2">`</span><span class="p">)</span>
+    <span class="k">switch</span><span class="p">(</span><span class="nx">event</span><span class="p">)</span> <span class="p">{</span>
+      <span class="k">case</span> <span class="nx">FormEvent</span><span class="p">.</span><span class="nx">Load</span><span class="p">:</span>
+        <span class="k">if</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">currentState</span> <span class="o">===</span> <span class="nx">FormState</span><span class="p">.</span><span class="nx">Pending</span><span class="p">)</span> <span class="p">{</span>
+          <span class="k">this</span><span class="p">.</span><span class="nx">loadForm</span><span class="p">();</span>
+        <span class="p">}</span>
+        <span class="k">break</span><span class="p">;</span>
+      
+      <span class="k">case</span> <span class="nx">FormEvent</span><span class="p">.</span><span class="nx">Loaded</span><span class="p">:</span>
+        <span class="k">if</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">currentState</span> <span class="o">===</span> <span class="nx">FormState</span><span class="p">.</span><span class="nx">Loading</span><span class="p">)</span> <span class="p">{</span>
+          <span class="k">this</span><span class="p">.</span><span class="nx">setState</span><span class="p">(</span><span class="nx">FormState</span><span class="p">.</span><span class="nx">Active</span><span class="p">);</span>
+        <span class="p">}</span>
+        <span class="k">break</span><span class="p">;</span>
+      
+      <span class="k">case</span> <span class="nx">FormEvent</span><span class="p">.</span><span class="nx">Save</span><span class="p">:</span>
+        <span class="k">if</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">currentState</span> <span class="o">===</span> <span class="nx">FormState</span><span class="p">.</span><span class="nx">Active</span><span class="p">)</span> <span class="p">{</span>
+          <span class="k">this</span><span class="p">.</span><span class="nx">setState</span><span class="p">(</span><span class="nx">FormState</span><span class="p">.</span><span class="nx">Saving</span><span class="p">);</span>
+          <span class="k">this</span><span class="p">.</span><span class="nx">mySaveFunction</span><span class="p">();</span>
+        <span class="p">}</span>
+        <span class="k">break</span><span class="p">;</span>
+    
+      <span class="k">case</span> <span class="nx">FormEvent</span><span class="p">.</span><span class="nx">Saved</span><span class="p">:</span>
+        <span class="k">if</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">currentState</span> <span class="o">===</span> <span class="nx">FormState</span><span class="p">.</span><span class="nx">Saving</span><span class="p">)</span> <span class="p">{</span>
+          <span class="k">this</span><span class="p">.</span><span class="nx">doAfterSaveOps</span><span class="p">();</span>
+          <span class="k">this</span><span class="p">.</span><span class="nx">setState</span><span class="p">(</span><span class="nx">FormState</span><span class="p">.</span><span class="nx">Active</span><span class="p">);</span>
+        <span class="p">}</span>
+        <span class="k">break</span><span class="p">;</span>
+            
+      <span class="k">case</span> <span class="nx">FormEvent</span><span class="p">.</span><span class="nb">Error</span><span class="p">:</span>
+        <span class="k">if</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">currentState</span> <span class="o">===</span> <span class="nx">FormState</span><span class="p">.</span><span class="nx">Loading</span><span class="p">)</span> <span class="p">{</span>
+          <span class="k">this</span><span class="p">.</span><span class="nx">setState</span><span class="p">(</span><span class="nx">FormState</span><span class="p">.</span><span class="nb">Error</span><span class="p">);</span>
+          <span class="k">this</span><span class="p">.</span><span class="nx">notifyUser</span><span class="p">();</span>
+        <span class="p">}</span> <span class="k">else</span> <span class="k">if</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">currentState</span> <span class="o">===</span> <span class="nx">FormState</span><span class="p">.</span><span class="nx">Saving</span><span class="p">)</span> <span class="p">{</span>
+          <span class="k">this</span><span class="p">.</span><span class="nx">notifyErrorOnForm</span><span class="p">();</span>
+          <span class="k">this</span><span class="p">.</span><span class="nx">setState</span><span class="p">(</span><span class="nx">FormState</span><span class="p">.</span><span class="nx">Active</span><span class="p">);</span>
+        <span class="p">}</span>
+        <span class="k">break</span><span class="p">;</span>
+    <span class="p">}</span>
+  <span class="p">}</span>
+  <span class="nx">setState</span><span class="p">(</span><span class="nx">state</span><span class="p">:</span> <span class="nx">FormState</span><span class="p">)</span> <span class="p">{</span>
+    <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="s2">`Changing state from </span><span class="p">${</span><span class="nx">FormState</span><span class="p">[</span><span class="k">this</span><span class="p">.</span><span class="nx">currentState</span><span class="p">]}</span><span class="s2"> to </span><span class="p">${</span><span class="nx">FormState</span><span class="p">[</span><span class="nx">state</span><span class="p">]}</span><span class="s2">`</span><span class="p">)</span>
+    <span class="k">this</span><span class="p">.</span><span class="nx">currentState</span> <span class="o">=</span> <span class="nx">state</span><span class="p">;</span>
+  <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<h3 id="ui-additional-use-cases">UI Additional Use Cases</h3>
+
+<p>Using state machines for user interaction is also natural and useful.  Implementing complex user interaction like drag and drop can be done using state machines.  The mapping events from the mouse and keyboard through the state machine make it easy to handle moving and other complex interaction you might want to do.</p>
+
+<h1 id="workflow-engines">Workflow Engines</h1>
+
+<p>Most workflow engines provided by big vendors with graphical user interfaces are really state machines.  A user/developer for these systems defines the flow of data and what actions to perform on a state change and/or what conditions must occur to change the state.  Most of these systems are really slow and unnecessary.  It is very easy to write a state machine library and persist the results and transition to a data store.  Business workflows can been very complex and have 100s of state and be a combination of multiple states.</p>
+
+<p>If you need to have low latency and high throughput look at using Command Query Responsibility Segregation.  Most business application do not need this throughput and this design is fast enough for most use cases.</p>
+
+<h2 id="design">Design</h2>
+
+<p>A recommend designing your library based on <a href="https://github.com/p-org/PSharp">PSharp</a>.  First thing you need is a decided how you are going to prevent multiple threads for accessing the state machine.  I would suggest using a actor library or framework.  You do not want nor need to have the a state machine instance per an actor.  Make the state machine thread safe by having all of the fields readonly and don’t change the state on any of the state machine.  The current state is stored in the actor.</p>
+
+<h3 id="where-to-store-the-state">Where to Store the State</h3>
+
+<p>The state machine needs to have a context associated with it and a few accessor on it.  None of the accessor need to be thread safe.</p>
+
+<ul>
+  <li>Current State - The current state.</li>
+  <li>Set State - A way to set the state.</li>
+  <li>Queue - If you want it to behave like PSharp need the queue to store the pending events to process.  This can be really small since it will only contain events the state machine trigger itself and defered events.  The events need to be processed in order.</li>
+</ul>
+
+<h3 id="how-to-define-the-states">How to define the States</h3>
+
+<p>Create an interface with a couple of fields and methods.</p>
+
+<h4 id="fields">Fields</h4>
+
+<ul>
+  <li>State - The state it represents.</li>
+  <li>Events - A dictionary of events it supports.
+    <ul>
+      <li>Ignore</li>
+      <li>Defer - May not need this one.</li>
+      <li>To - The next state to go to.</li>
+      <li>Action - An action to run in this state.</li>
+    </ul>
+  </li>
+  <li>Enter - Called when you enter the state.</li>
+  <li>Exit - Called when you exit a state.</li>
+</ul>
+
+<h3 id="defining-the-events">Defining the Events.</h3>
+
+<p>The events that go with the state need to support certain actions.  There are a couple of options for doing this.  I personal use an interface and an enum of the action types I need.  Then I define all of the possible fields I need which are ActionType, NewState and Action.  Then I create a DSL for defining the event mapping.</p>
+
+<h3 id="creating-the-state-machine">Creating the State Machine</h3>
+
+<p>In the actor you have a transition function which takes the event and the parameter type for the state machine.  The parameter could be null depending on the event.  When a new event is received, it needs to be saved to the database before being processed.  Once transition has been completed, mark the event as processed and update the state.</p>
+
+<h3 id="transition-and-event-storage">Transition and Event Storage</h3>
+
+<p>Need to store the following things in the database:</p>
+
+<ul>
+  <li>The event names and descriptions.</li>
+  <li>The state names and descriptions.</li>
+  <li>Current state of the actor</li>
+  <li>Transition history</li>
+  <li>Event history</li>
+</ul>
+
+<p>If you need to be very fast, use a single writer and update in a batch.  If this still isn’t fast enough, use an append only log with a single writer.</p>
+
+<h2 id="addition-resources">Addition Resources</h2>
+
+<p>Martin Thompson talks on YouTube, Infoq and Twitter.  <a href="https://github.com/real-logic/aeron">Aeron</a> has many state machines defined in it using Java Enums and is extremely fast.  Use atomic operations for managing the different states.</p>
+
+<p><a href="https://github.com/p-org/PSharp">PSharp</a> is a library and a DSL for creating state machines.</p>
+
+<p><a href="http://www.tcpipguide.com/free/t_TCPOperationalOverviewandtheTCPFiniteStateMachineF-2.htm">TCP/IP</a> state machine</p>
+
+<p><a href="https://raft.github.io/">Raft</a> Raft Protocol</p>
+
+  </div><a class="u-url" href="/state/machines/2019/09/30/state-machines-initial.html" hidden></a>
+</article>
+
+      </div>
+    </main><footer class="site-footer h-card">
+  <data class="u-url" href="/"></data>
+
+  <div class="wrapper">
+
+    <h2 class="footer-heading">Matt Software Architecture</h2>
+
+    <div class="footer-col-wrapper">
+      <div class="footer-col footer-col-1">
+        <ul class="contact-list">
+          <li class="p-name">Matt Software Architecture</li><li><a class="u-email" href="mailto:your-email@example.com">your-email@example.com</a></li></ul>
+      </div>
+
+      <div class="footer-col footer-col-2"><ul class="social-media-list"><li><a href="https://github.com/mrh0057"><svg class="svg-icon"><use xlink:href="/assets/minima-social-icons.svg#github"></use></svg> <span class="username">mrh0057</span></a></li><li><a href="https://www.twitter.com/mrh00571"><svg class="svg-icon"><use xlink:href="/assets/minima-social-icons.svg#twitter"></use></svg> <span class="username">mrh00571</span></a></li></ul>
+</div>
+
+      <div class="footer-col footer-col-3">
+        <p>A blog about software architecture and design.</p>
+      </div>
+    </div>
+
+  </div>
+
+</footer>
+</body>
+
+</html>
